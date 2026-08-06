@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MenuZuri — Beautiful Digital Menus for Nairobi Businesses</title>
+<meta name="description" content="Digital menus for Nairobi businesses. Scan, browse, order — no app needed. Set up in 24 hours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#0B3D2E;
+    --forest-dark:#082B20;
+    --gold:#E8A33D;
+    --gold-light:#F3C77C;
+    --cream:#FBF6EC;
+    --ink:#16241D;
+    --line: rgba(11,61,46,0.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Sora',sans-serif;
+  }
+  .mono{ font-family:'JetBrains Mono',monospace; letter-spacing:0.02em; }
+  a{color:inherit;}
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 26px; border-radius:999px; font-weight:600;
+    font-size:15px; text-decoration:none; border:1px solid transparent;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+    cursor:pointer;
+  }
+  .btn:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; }
+  .btn-primary{ background:var(--gold); color:var(--forest-dark); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(232,163,61,0.35); }
+  .btn-ghost{ background:transparent; color:var(--cream); border-color:rgba(251,246,236,0.35); }
+  .btn-ghost:hover{ background:rgba(251,246,236,0.1); }
+  .btn-dark{ background:var(--forest); color:var(--cream); }
+  .btn-dark:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(11,61,46,0.25); }
+
+  /* pattern strip - kitenge-inspired geometric border, used sparingly as signature */
+  .kitenge{
+    height:10px;
+    background: repeating-linear-gradient(115deg,
+      var(--gold) 0 10px,
+      var(--forest) 10px 20px,
+      var(--gold-light) 20px 30px,
+      var(--forest-dark) 30px 40px);
+  }
+
+  header{ position:sticky; top:0; z-index:50; background:var(--forest-dark); }
+  nav{ display:flex; align-items:center; justify-content:space-between; padding:18px 0; }
+  .logo{ display:flex; align-items:center; gap:10px; color:var(--cream); font-weight:800; font-size:19px; }
+  .logo-badge{ width:34px; height:34px; border-radius:9px; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .navlinks{ display:flex; gap:32px; list-style:none; margin:0; padding:0; }
+  .navlinks a{ color:rgba(251,246,236,0.75); text-decoration:none; font-size:14px; font-weight:500; }
+  .navlinks a:hover{ color:var(--cream); }
+  .navcta{ display:flex; align-items:center; gap:14px; }
+  .navlinks-mobile{ display:none; }
+  @media(max-width:820px){
+    .navlinks{ display:none; }
+    .navcta .btn-ghost{ display:none; }
+  }
+
+  /* HERO */
+  .hero{ background:var(--forest-dark); color:var(--cream); padding:72px 0 0; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center; padding-bottom:64px;}
+  @media(max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; background:rgba(232,163,61,0.14); border:1px solid rgba(232,163,61,0.4); color:var(--gold-light); padding:7px 14px; border-radius:999px; font-size:13px; font-weight:600; margin-bottom:22px; }
+  .hero h1{ font-size:clamp(34px,5vw,54px); line-height:1.06; font-weight:800; margin:0 0 20px; letter-spacing:-0.02em; }
+  .hero h1 em{ font-style:normal; color:var(--gold-light); }
+  .hero p.lead{ font-size:18px; line-height:1.6; color:rgba(251,246,236,0.72); max-width:480px; margin:0 0 32px; }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px; }
+  .hero-stats{ display:flex; gap:36px; flex-wrap:wrap; border-top:1px solid rgba(251,246,236,0.14); padding-top:26px; }
+  .stat b{ display:block; font-family:'Sora',sans-serif; font-size:26px; color:var(--gold-light); }
+  .stat span{ font-size:13px; color:rgba(251,246,236,0.6); }
+
+  /* Phone mockup - signature element */
+  .phone-wrap{ display:flex; justify-content:center; }
+  .phone{
+    width:290px; background:var(--cream); border-radius:34px; padding:14px;
+    box-shadow:0 40px 80px rgba(0,0,0,0.45), 0 0 0 8px rgba(251,246,236,0.06);
+    transform:rotate(2deg);
+  }
+  .phone-screen{ background:#fff; border-radius:22px; overflow:hidden; }
+  .phone-status{ height:26px; background:var(--forest); }
+  .phone-head{ background:var(--forest); color:var(--cream); padding:16px 16px 20px; }
+  .phone-head .tag{ font-size:11px; background:var(--gold); color:var(--forest-dark); display:inline-block; padding:3px 9px; border-radius:999px; font-weight:700; margin-bottom:8px; }
+  .phone-head h3{ margin:0; font-size:19px; }
+  .phone-head p{ margin:4px 0 0; font-size:12px; color:rgba(251,246,236,0.7); }
+  .phone-body{ padding:14px 16px 20px; }
+  .phone-section-title{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--forest); font-weight:700; margin:14px 0 8px; }
+  .menu-item{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px dashed var(--line); }
+  .menu-item:last-child{ border-bottom:none; }
+  .menu-item .em{ font-size:20px; margin-right:8px; }
+  .menu-item .name{ font-weight:700; font-size:13.5px; }
+  .menu-item .desc{ font-size:11.5px; color:#6b7a72; margin-top:2px; }
+  .menu-item .price{ font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12.5px; color:var(--forest); white-space:nowrap; }
+  .qr-chip{ position:absolute; right:-18px; bottom:60px; background:var(--gold); color:var(--forest-dark); padding:10px 14px; border-radius:14px; font-size:12px; font-weight:700; box-shadow:0 14px 30px rgba(0,0,0,0.3); display:flex; align-items:center; gap:8px; }
+  @media(max-width:900px){ .qr-chip{ display:none; } }
+
+  section{ padding:88px 0; }
+  .section-head{ max-width:640px; margin-bottom:52px; }
+  .eyebrow-dark{ color:var(--forest); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+  .section-head h2{ font-size:clamp(26px,3.6vw,38px); margin:0 0 14px; letter-spacing:-0.01em; }
+  .section-head p{ font-size:16px; color:#4d5c53; line-height:1.6; margin:0; }
+
+  /* HOW IT WORKS - timeline since it's a real sequence */
+  .timeline{ position:relative; }
+  .tl-line{ position:absolute; left:27px; top:8px; bottom:8px; width:2px; background:var(--line); }
+  @media(max-width:700px){ .tl-line{ display:none; } }
+  .tl-item{ display:grid; grid-template-columns:56px 1fr; gap:24px; margin-bottom:36px; }
+  .tl-num{ width:56px; height:56px; border-radius:16px; background:var(--forest); color:var(--gold-light); display:flex; align-items:center; justify-content:center; font-size:22px; z-index:1; }
+  .tl-item h3{ margin:6px 0 6px; font-size:19px; }
+  .tl-item p{ margin:0; color:#4d5c53; line-height:1.6; font-size:15px; max-width:520px; }
+
+  /* PRICING */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media(max-width:900px){ .pricing-grid{ grid-template-columns:1fr; } }
+  .plan{ background:#fff; border:1px solid var(--line); border-radius:20px; padding:32px 28px; display:flex; flex-direction:column; }
+  .plan.popular{ border-color:var(--gold); box-shadow:0 18px 40px rgba(11,61,46,0.1); position:relative; }
+  .plan-badge{ position:absolute; top:-13px; left:28px; background:var(--gold); color:var(--forest-dark); font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; }
+  .plan-name{ font-weight:700; font-size:15px; color:var(--forest); margin-bottom:14px; }
+  .plan-price{ font-family:'Sora',sans-serif; font-size:38px; font-weight:800; margin-bottom:2px; }
+  .plan-cycle{ font-size:13px; color:#6b7a72; margin-bottom:4px; }
+  .plan-setup{ font-size:13px; color:#6b7a72; margin-bottom:24px; }
+  .plan ul{ list-style:none; padding:0; margin:0 0 28px; flex:1; }
+  .plan li{ display:flex; gap:10px; align-items:flex-start; font-size:14.5px; padding:7px 0; color:#33423a; }
+  .plan li::before{ content:"✓"; color:var(--forest); font-weight:700; }
+
+  /* WHY US */
+  .why-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  @media(max-width:900px){ .why-grid{ grid-template-columns:1fr 1fr; } }
+  @media(max-width:600px){ .why-grid{ grid-template-columns:1fr; } }
+  .why-card{ padding:6px 0; }
+  .why-icon{ width:46px; height:46px; border-radius:12px; background:rgba(11,61,46,0.08); display:flex; align-items:center; justify-content:center; font-size:21px; margin-bottom:14px; }
+  .why-card h3{ font-size:16.5px; margin:0 0 8px; }
+  .why-card p{ margin:0; font-size:14px; color:#4d5c53; line-height:1.55; }
+
+  /* TESTIMONIALS */
+  .testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media(max-width:900px){ .testi-grid{ grid-template-columns:1fr; } }
+  .testi{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:26px; }
+  .stars{ color:var(--gold); letter-spacing:2px; margin-bottom:14px; font-size:14px; }
+  .testi p.quote{ font-size:14.5px; line-height:1.6; color:#33423a; margin:0 0 20px; }
+  .testi-person{ display:flex; align-items:center; gap:12px; }
+  .avatar{ width:38px; height:38px; border-radius:999px; background:var(--forest); color:var(--gold-light); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+  .testi-person b{ display:block; font-size:14px; }
+  .testi-person span{ font-size:12.5px; color:#6b7a72; }
+
+  /* CTA BAND */
+  .cta-band{ background:var(--forest); color:var(--cream); text-align:center; padding:80px 24px; }
+  .cta-band h2{ font-size:clamp(26px,4vw,38px); margin:0 0 14px; }
+  .cta-band p{ color:rgba(251,246,236,0.72); margin:0 0 32px; font-size:16px; }
+
+  /* CONTACT */
+  .contact-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; }
+  @media(max-width:900px){ .contact-grid{ grid-template-columns:1fr; } }
+  .contact-item{ display:flex; gap:14px; margin-bottom:22px; }
+  .contact-item .ic{ width:42px; height:42px; border-radius:11px; background:rgba(11,61,46,0.08); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .contact-item b{ display:block; font-size:14px; }
+  .contact-item a, .contact-item span.val{ font-size:14.5px; color:#4d5c53; text-decoration:none; }
+  form{ background:#fff; border:1px solid var(--line); border-radius:20px; padding:32px; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:var(--forest); }
+  .field input, .field select, .field textarea{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+    font-family:'Inter',sans-serif; font-size:14.5px; background:var(--cream); color:var(--ink);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:2px solid var(--forest); outline-offset:1px; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:520px){ .field-row{ grid-template-columns:1fr; } }
+  .form-note{ font-size:12.5px; color:#6b7a72; margin-top:10px; }
+
+  footer{ background:var(--forest-dark); color:rgba(251,246,236,0.65); padding:56px 0 28px; }
+  .foot-grid{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px; margin-bottom:40px; }
+  @media(max-width:700px){ .foot-grid{ grid-template-columns:1fr; } }
+  .foot-logo{ display:flex; align-items:center; gap:10px; color:var(--cream); font-weight:800; font-size:18px; margin-bottom:12px; }
+  footer h4{ color:var(--cream); font-size:13px; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 14px; }
+  footer ul{ list-style:none; padding:0; margin:0; }
+  footer li{ margin-bottom:9px; font-size:14px; }
+  footer a{ text-decoration:none; color:inherit; }
+  footer a:hover{ color:var(--cream); }
+  .foot-bottom{ border-top:1px solid rgba(251,246,236,0.12); padding-top:22px; font-size:12.5px; }
+
+  ::selection{ background:var(--gold); color:var(--forest-dark); }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="#" class="logo"><span class="logo-badge">🍽</span> MenuZuri</a>
+      <ul class="navlinks">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="navcta">
+        <a href="#contact" class="btn btn-ghost">Get Started</a>
+      </div>
+    </nav>
+  </div>
+</header>
+<div class="kitenge"></div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">🇰🇪 Made for Nairobi Businesses</span>
+      <h1>Beautiful digital menus for <em>every business</em></h1>
+      <p class="lead">Give your customers a stunning menu on their phone — no app needed. Just scan, browse, and order. We set everything up for you in 24 hours.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-primary">Get Your Digital Menu →</a>
+        <a href="#how" class="btn btn-ghost">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>24hrs</b><span>Setup time — we're fast</span></div>
+        <div class="stat"><b>0</b><span>App downloads needed</span></div>
+        <div class="stat"><b>100%</b><span>Mobile-friendly design</span></div>
+        <div class="stat"><b>∞</b><span>Menu updates anytime</span></div>
+      </div>
+    </div>
+    <div class="phone-wrap" style="position:relative;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status"></div>
+          <div class="phone-head">
+            <span class="tag">Open Now</span>
+            <h3>Zuri Restaurant</h3>
+            <p>Westlands, Nairobi</p>
+          </div>
+          <div class="phone-body">
+            <div class="phone-section-title">🍽 Main Dishes</div>
+            <div class="menu-item">
+              <div><span class="em">🥩</span><span class="name">Nyama Choma Platter</span><div class="desc">Grilled beef, kachumbari, ugali</div></div>
+              <div class="price">KES 850</div>
+            </div>
+            <div class="menu-item">
+              <div><span class="em">🐟</span><span class="name">Tilapia Fry</span><div class="desc">Whole fish, chips & salad</div></div>
+              <div class="price">KES 700</div>
+            </div>
+            <div class="menu-item">
+              <div><span class="em">🍗</span><span class="name">Kuku Kienyeji</span><div class="desc">Free-range chicken, ugali</div></div>
+              <div class="price">KES 650</div>
+            </div>
+            <div class="phone-section-title">☕ Drinks</div>
+            <div class="menu-item">
+              <div><span class="em">🥤</span><span class="name">Fresh Juice</span><div class="desc">Mango, passion, avocado</div></div>
+              <div class="price">KES 150</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="qr-chip">📷 Scan to view menu</div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow-dark">How It Works</div>
+      <h2>Up and running in three simple steps</h2>
+      <p>You focus on your business. We handle everything technical. No experience needed — just tell us your menu items and we do the rest.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">📋</div>
+        <div><h3>Send us your menu</h3><p>WhatsApp or email us your menu items, prices, and photos. Even a handwritten menu works — we'll handle the rest.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-num">✨</div>
+        <div><h3>We build it for you</h3><p>Our team creates a beautiful, branded digital menu for your business. Ready within 24 hours of receiving your content.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-num">📲</div>
+        <div><h3>Place your QR code</h3><p>We print and deliver your QR codes. Put them on tables, the door, your WhatsApp status — customers scan and browse instantly.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-num">🔄</div>
+        <div><h3>Update anytime</h3><p>Price changed? New dish? Just WhatsApp us and we update your menu same day. No technical skills needed, ever.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="background:#fff;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow-dark">Pricing</div>
+      <h2>Simple, honest pricing</h2>
+      <p>No hidden fees. No contracts. Cancel any time. M-Pesa accepted.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-name">BASIC</div>
+        <div class="plan-price">KES 1,000</div>
+        <div class="plan-cycle">per month</div>
+        <div class="plan-setup">+ KES 1,500 one-time setup</div>
+        <ul>
+          <li>Single-page digital menu</li>
+          <li>QR code printed & delivered</li>
+          <li>Up to 20 menu items</li>
+          <li>2 menu updates per month</li>
+          <li>Mobile-optimized design</li>
+        </ul>
+        <a href="#contact" class="btn btn-dark">Get Started</a>
+      </div>
+      <div class="plan popular">
+        <div class="plan-badge">⭐ Most Popular</div>
+        <div class="plan-name">STANDARD</div>
+        <div class="plan-price">KES 1,500</div>
+        <div class="plan-cycle">per month</div>
+        <div class="plan-setup">+ KES 2,500 one-time setup</div>
+        <ul>
+          <li>Multi-section menu with photos</li>
+          <li>Custom branded design & colors</li>
+          <li>Up to 60 menu items</li>
+          <li>Unlimited menu updates</li>
+          <li>5 QR codes printed & delivered</li>
+          <li>WhatsApp ordering link</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Get Started</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">PREMIUM</div>
+        <div class="plan-price">KES 2,000</div>
+        <div class="plan-cycle">per month</div>
+        <div class="plan-setup">+ KES 3,500 one-time setup</div>
+        <ul>
+          <li>Everything in Standard</li>
+          <li>Menu view analytics dashboard</li>
+          <li>Daily specials & promotions</li>
+          <li>Multi-language support</li>
+          <li>Priority same-day updates</li>
+          <li>10 QR codes printed & delivered</li>
+        </ul>
+        <a href="#contact" class="btn btn-dark">Get Started</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow-dark">Why MenuZuri</div>
+      <h2>Why Nairobi businesses choose us</h2>
+      <p>We're not a foreign app or a complicated system. We're a Nairobi team that understands your business.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">🇰🇪</div><h3>Built for Kenya</h3><p>M-Pesa payments, Swahili support, and designs that resonate with Kenyan customers.</p></div>
+      <div class="why-card"><div class="why-icon">⚡</div><h3>Ready in 24 hours</h3><p>Send us your menu today, have your QR code live by tomorrow. No waiting weeks.</p></div>
+      <div class="why-card"><div class="why-icon">📞</div><h3>WhatsApp support</h3><p>No complicated tickets. Just WhatsApp us any time and we handle it immediately.</p></div>
+      <div class="why-card"><div class="why-icon">💰</div><h3>Saves you money</h3><p>No more printing menus every time prices change. Update digitally, save on printing costs.</p></div>
+      <div class="why-card"><div class="why-icon">📊</div><h3>Look professional</h3><p>Impress customers and stand out from competitors still using paper menus.</p></div>
+      <div class="why-card"><div class="why-icon">🔒</div><h3>No lock-in</h3><p>Cancel any time. No long contracts. We earn your business every single month.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#fff;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow-dark">Testimonials</div>
+      <h2>What our clients say</h2>
+      <p>Real feedback from real Nairobi business owners.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"Our customers love it. They scan the QR code and immediately start ordering. We even get fewer questions about prices now. Best decision we made this year."</p>
+        <div class="testi-person"><div class="avatar">AM</div><div><b>Amina Mwangi</b><span>Amina's Kitchen, Westlands</span></div></div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"I was spending KES 3,000 every month reprinting menus when prices changed. Now I just WhatsApp MenuZuri and it's done. Saves me money and time."</p>
+        <div class="testi-person"><div class="avatar">JO</div><div><b>James Ochieng</b><span>Lakeside Café, Kilimani</span></div></div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p class="quote">"Very professional team. Setup was done overnight and the design looked amazing. My customers keep asking how I made it. I tell them — MenuZuri!"</p>
+        <div class="testi-person"><div class="avatar">FK</div><div><b>Fatuma Kamau</b><span>Tamu Salon & Spa, Karen</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <div class="wrap">
+    <h2>Ready to go digital?</h2>
+    <p>Join Nairobi businesses already using MenuZuri. Setup takes 24 hours. No tech skills needed.</p>
+    <a href="#contact" class="btn btn-primary">Get Your Digital Menu Now →</a>
+  </div>
+</div>
+
+<section id="contact" style="background:#fff;">
+  <div class="wrap contact-grid">
+    <div>
+      <div class="eyebrow-dark">Contact Us</div>
+      <h2 style="font-size:28px; margin:0 0 14px;">Let's get your menu online</h2>
+      <p style="color:#4d5c53; margin:0 0 30px; line-height:1.6;">Fill in the form and we'll reach out within 2 hours. Or just WhatsApp us directly — whichever is easier for you.</p>
+      <div class="contact-item"><div class="ic">📱</div><div><b>WhatsApp</b><a href="https://wa.me/254118794909">0118794909</a></div></div>
+      <div class="contact-item"><div class="ic">📧</div><div><b>Email</b><a href="mailto:kingbraah78@gmail.com">kingbraah78@gmail.com</a></div></div>
+      <div class="contact-item"><div class="ic">📍</div><div><b>Location</b><span class="val">Jamhuri, Nairobi</span></div></div>
+      <div class="contact-item"><div class="ic">⏰</div><div><b>Working Hours</b><span class="val">Mon–Sat, 8am – 8pm</span></div></div>
+    </div>
+    <form id="leadForm">
+      <div class="field-row">
+        <div class="field"><label for="name">Your Name</label><input id="name" name="name" type="text" required></div>
+        <div class="field"><label for="business">Business Name</label><input id="business" name="business" type="text" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="phone">Phone / WhatsApp</label><input id="phone" name="phone" type="tel" required></div>
+        <div class="field">
+          <label for="type">Business Type</label>
+          <select id="type" name="type">
+            <option>Restaurant / Café</option>
+            <option>Bar / Lounge</option>
+            <option>Hotel</option>
+            <option>Salon / Spa</option>
+            <option>Retail Shop</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label for="notes">Anything else?</label><textarea id="notes" name="notes" rows="3"></textarea></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message — We'll Call You ✓</button>
+      <p class="form-note">This form currently opens WhatsApp with your details pre-filled. Swap in your own form handler (e.g. Formspree, a serverless function) when you redeploy — see README.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">🍽 MenuZuri</div>
+        <p style="max-width:280px; font-size:14px; line-height:1.6;">Beautiful digital menus for Nairobi businesses. Scan. Browse. Order. Simple.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/254118794909">WhatsApp Us</a></li>
+          <li><a href="mailto:kingbraah78@gmail.com">kingbraah78@gmail.com</a></li>
+          <li>Jamhuri, Nairobi</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">© 2026 MenuZuri — Fortune Fredrick. All rights reserved. Made with ❤️ in Nairobi</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('leadForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const business = document.getElementById('business').value;
+    const phone = document.getElementById('phone').value;
+    const type = document.getElementById('type').value;
+    const notes = document.getElementById('notes').value;
+    const msg = `Hi MenuZuri! I'd like a digital menu.%0A%0AName: ${encodeURIComponent(name)}%0ABusiness: ${encodeURIComponent(business)}%0APhone: ${encodeURIComponent(phone)}%0AType: ${encodeURIComponent(type)}%0ANotes: ${encodeURIComponent(notes)}`;
+    window.open(`https://wa.me/254118794909?text=${msg}`, '_blank');
+  });
+</script>
+
+</body>
+</html>
